@@ -1,6 +1,7 @@
 "use strict";
 const path = require("path");
 const express = require("express");
+const { securityHeaders } = require("./middleware/security");
 const db = require("./src/db");
 const checker = require("./src/checker");
 const scheduler = require("./src/scheduler");
@@ -9,6 +10,8 @@ const app = express();
 const PORT = process.env.PORT || 4700;
 
 app.set("view engine", "ejs");
+
+app.use(securityHeaders);
 app.set("views", path.join(__dirname, "views"));
 app.use(express.json({ limit: "1mb" }));
 app.use(express.static(path.join(__dirname, "public")));
