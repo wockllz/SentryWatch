@@ -1,0 +1,15 @@
+services:
+  sentrywatch:
+    build: .
+    container_name: sentrywatch
+    ports:
+      - "4700:4700"
+    volumes:
+      - sentrywatch-data:/app/data
+    environment:
+      - PORT=4700
+      - SW_TIMEOUT_MS=15000
+    restart: unless-stopped
+
+volumes:
+  sentrywatch-data:

@@ -1,0 +1,18 @@
+{
+  "name": "sentrywatch",
+  "version": "1.0.0",
+  "description": "SentryWatch — self-hosted uptime and security monitor. Tracks availability, response times, TLS expiry, security headers, and incidents. Docker ready.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "selftest": "node tests/selftest.js"
+  },
+  "keywords": ["monitoring", "uptime", "devops", "security-headers", "docker", "observability"],
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^12.11.1",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2"
+  }
+}
