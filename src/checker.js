@@ -208,6 +208,11 @@ function uptimePercent(targetId, sinceMs) {
   return Number(((okCount / checks.length) * 100).toFixed(1));
 }
 
+function checksLastHour(targetId) {
+  const since = Date.now() - 60 * 60 * 1000;
+  return db.checksSince(targetId, since).length;
+}
+
 function summarize(target) {
   const day = 24 * 60 * 60 * 1000;
   const last = db.lastCheck(target.id);
@@ -231,6 +236,8 @@ function summarize(target) {
     security: last
       ? { grade: last.grade, findings: JSON.parse(last.findings || "[]"), tlsDays: last.tls_days }
       : null,
+    checksLastHour: checksLastHour(target.id),
+    nextCheckIn: last ? Math.max(0, Math.ceil((last.ts + Math.max(5, target.interval_seconds) * 1000 - Date.now()) / 1000)) : 0,
     sparkline: recent.map((c) => ({ ok: !!c.ok, ms: c.response_ms, ts: c.ts }))
   };
 }
@@ -238,6 +245,7 @@ function summarize(target) {
 module.exports = {
   performCheck,
   summarize,
+  checksLastHour,
   uptimePercent,
   analyzeHeaders,
   tlsExpiryDays,

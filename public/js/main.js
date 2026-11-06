@@ -94,6 +94,14 @@
 
       const metrics = document.createElement("div");
       metrics.className = "t-metrics";
+      const nxt = Math.max(0, Number(target.nextCheckIn || 0));
+      const auto = document.createElement("span");
+      auto.className = "metric";
+      auto.innerHTML = `auto check in <b>${nxt}s</b>`;
+      const vol = document.createElement("span");
+      vol.className = "metric";
+      vol.innerHTML = `checks/hr <b>${target.checksLastHour || 0}</b>`;
+      metrics.append(auto, vol);
 
       const addMetric = (label, value, extra) => {
         const m = document.createElement("div");
@@ -256,5 +264,20 @@
   $("refresh").addEventListener("click", refresh);
 
   refresh();
+  const checkAllBtn = $("check-all");
+  if (checkAllBtn) {
+    checkAllBtn.addEventListener("click", async () => {
+      checkAllBtn.disabled = true;
+      checkAllBtn.textContent = "CHECKING…";
+      try {
+        await api("/api/check-all", { method: "POST" });
+        await refresh();
+      } finally {
+        checkAllBtn.disabled = false;
+        checkAllBtn.textContent = "CHECK ALL";
+      }
+    });
+  }
+
   setInterval(refresh, 5000);
 })();

@@ -20,6 +20,20 @@ app.get("/", (req, res) => res.render("index"));
 app.get("/api/health", (req, res) => res.json({ ok: true, name: "SentryWatch" }));
 
 /* ---------------------------------------------------------------- targets */
+app.post("/api/check-all", async (req, res) => {
+  const targets = db.listTargets();
+  const results = [];
+  for (const t of targets) {
+    try {
+      const r = await checker.performCheck(t.id);
+      results.push({ id: t.id, ok: r.check.ok });
+    } catch (err) {
+      results.push({ id: t.id, ok: false, error: err.message });
+    }
+  }
+  res.json({ checked: results.length, results });
+});
+
 app.get("/api/targets", (req, res) => {
   res.json({ targets: db.listTargets().map((t) => checker.summarize(t)) });
 });
