@@ -74,6 +74,41 @@
         await refresh();
       });
 
+      const toggle = document.createElement("button");
+      toggle.className = "btn ghost small";
+      toggle.type = "button";
+      toggle.textContent = target.active ? "PAUSE" : "RESUME";
+      toggle.title = target.active ? "Stop automatic checks" : "Resume automatic checks";
+      toggle.addEventListener("click", async () => {
+        toggle.disabled = true;
+        await api(`/api/targets/${target.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ active: !target.active })
+        });
+        await refresh();
+      });
+
+      const interval = document.createElement("select");
+      interval.className = "interval";
+      interval.title = "Automatic check interval";
+      for (const [label, secs] of [["30s", 30], ["1m", 60], ["5m", 300], ["15m", 900], ["1h", 3600]]) {
+        const opt = document.createElement("option");
+        opt.value = String(secs);
+        opt.textContent = label;
+        if (Number(target.intervalSeconds) === secs) opt.selected = true;
+        interval.appendChild(opt);
+      }
+      interval.addEventListener("change", async () => {
+        await api(`/api/targets/${target.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ intervalSeconds: Number(interval.value) })
+        });
+        await refresh();
+      });
+      actions.append(toggle, interval);
+
       const del = document.createElement("button");
       del.className = "btn danger small";
       del.type = "button";

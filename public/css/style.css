@@ -150,3 +150,16 @@ input:focus, select:focus { outline: none; border-color: var(--cyan); box-shadow
 .grade.A, .grade.B { color: var(--green); }
 .grade.C { color: var(--amber); }
 .grade.D, .grade.F { color: var(--red); }
+
+/* --- target controls ------------------------------------------------ */
+.interval {
+  background: #0d1218;
+  color: #cfe3f5;
+  border: 1px solid #1b2530;
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-family: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+.interval:hover { border-color: #34d399; }
